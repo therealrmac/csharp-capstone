@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatItUp", "ChatItUp\ChatItUp.csproj", "{D02E1BD9-6B28-4868-BA87-DF3F64D656AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E75D9792-B50E-467D-B851-5F1A58CFD8E6}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D02E1BD9-6B28-4868-BA87-DF3F64D656AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D02E1BD9-6B28-4868-BA87-DF3F64D656AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D02E1BD9-6B28-4868-BA87-DF3F64D656AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D02E1BD9-6B28-4868-BA87-DF3F64D656AC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1B7719E3-E510-48AE-9BCC-63C145EBF5FF}
+	EndGlobalSection
+EndGlobal
