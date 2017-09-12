@@ -1,0 +1,41 @@
+@model ChatItUp.Models.ThreadPost
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ThreadPost</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="ThreadPostId" />
+        <dt>
+            @Html.DisplayNameFor(model => model.message)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.message)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.dateCreatd)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.dateCreatd)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Thread)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Thread.ThreadId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

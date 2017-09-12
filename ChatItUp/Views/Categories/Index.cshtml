@@ -1,0 +1,30 @@
+@model IEnumerable<ChatItUp.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>The Categories</h2>
+
+
+    <div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+
+            <p class="col-md-4">
+                <span>
+                    <a asp-controller="Fora" asp-action="Index2" asp-route-id="@item.CategoryId">
+
+                        <img src="@item.image" alt="img" class="catImg text-center" />
+                    </a>
+                    
+                </span>
+                <br />
+                <strong class="text-center">@item.title</strong>
+            </p>
+
+        }
+    </div>
+</div>
+

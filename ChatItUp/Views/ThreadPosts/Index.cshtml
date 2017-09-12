@@ -1,0 +1,78 @@
+@model ChatItUp.Models.ViewModels.ThreadPostIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Chat It Up!</h2>
+
+<p>
+    <a asp-action="Create" asp-route-id="@Model.Thread.ThreadId">Reply</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <span>By</span>
+            </th>
+                <th>
+                    <span>Message</span>
+                </th>
+                <th>
+                    <span>Created on</span>
+                </th>
+            <th>
+                <span>Thread name</span>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var item in Model.threadpost)
+    {
+        <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.user.Firstname)
+            @Html.DisplayFor(x => item.user.Lastname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Thread.AuthorMessage)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Thread.created)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Thread.Title)
+        </td>
+
+        </tr>
+    }
+
+    </tbody>
+
+    <tbody>
+@foreach (var item in Model.threadpost) {
+        <tr>
+            <td>
+                @*Place where a user can click a persons name and be taken to their profile*@
+                @Html.DisplayFor(modelItem => item.user.Firstname)
+                @Html.DisplayFor(x => item.user.Lastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.message)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dateCreatd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Thread.Title)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ThreadPostId">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.ThreadPostId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

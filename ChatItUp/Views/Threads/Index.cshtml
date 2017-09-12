@@ -1,0 +1,49 @@
+@model ChatItUp.Models.ViewModels.ThreadForumViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Threads</h2>
+@if(Model.Thread == null)
+{
+    <h3>Be the first to make a thread!</h3>
+}
+
+<p>
+    <a asp-action="Create" asp-route-id="@Model.Forum.ForumId">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    <span>Title</span>
+                </th>
+                <th>
+                    <span>Created</span>
+                </th>
+            <th>
+                <span>Forum</span>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Thread) {
+        <tr>
+            <td>
+                <a asp-controller="ThreadPosts" asp-action="Index" asp-route-id="@item.ThreadId">
+                @Html.DisplayFor(modelItem => item.Title)
+                    </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Forum.ThreadTitles)
+            </td>
+
+        </tr>
+}
+    </tbody>
+</table>
