@@ -29,27 +29,28 @@
     </thead>
 
     <tbody>
-    @foreach (var item in Model.threadpost)
-    {
-        <tr>
+
+        <tr class="msg-update-boxes" >
         <td>
-            @Html.DisplayFor(modelItem => item.user.Firstname)
-            @Html.DisplayFor(x => item.user.Lastname)
+            @Model.Thread.User.Firstname
+            @Model.Thread.User.Lastname
+        </td>
+        <td >
+           @Model.Thread.AuthorMessage
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Thread.AuthorMessage)
+           @Model.Thread.created
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Thread.created)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Thread.Title)
+           @Model.Thread.Title
         </td>
 
         </tr>
-    }
+
 
     </tbody>
+ 
+
 
     <tbody>
 @foreach (var item in Model.threadpost) {

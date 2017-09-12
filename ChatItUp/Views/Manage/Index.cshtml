@@ -12,24 +12,17 @@
 
 <p class="text-success">@ViewData["StatusMessage"]</p>
 
-
-
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Name: </dt>
-
-        <dd>
-
-            @Model.ApplicationUser.Firstname @Model.ApplicationUser.Lastname
-        </dd>
-        <dt>Email: </dt>
-        <dd>
-            @Model.ApplicationUser.Email
-        </dd>
-    </dl>
-
-    <br />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<div class="container">
+    <div class="fb-profile">
+        <img align="left" class="fb-image-lg" src="https://i.ytimg.com/vi/lLWEXRAnQd0/maxresdefault.jpg" alt="Profile image example" />
+        <img align="left" class="fb-image-profile thumbnail" src="https://upload.wikimedia.org/wikipedia/en/thumb/7/70/Bob_at_Easel.jpg/220px-Bob_at_Easel.jpg" alt="Profile image example" />
+        <div class="fb-profile-text">
+            <h1>@Model.ApplicationUser.Firstname @Model.ApplicationUser.Lastname</h1>
+            
+        </div>
+    </div>
     <a asp-action="EditProfile" class="btn btn-default">Edit Profile</a>
-
 </div>
+
+

@@ -36,7 +36,7 @@ namespace ChatItUp.Controllers
                 return NotFound();
             }
 
-           ThreadVM.Thread =await _context.Thread.Include(t => t.Forum).Where(f => f.ForumId == (int)id).ToListAsync();
+           ThreadVM.Thread =await _context.Thread.Include(t => t.Forum).Include(u => u.User).Where(f => f.ForumId == (int)id).ToListAsync();
             ThreadVM.Forum = _context.Forum.Include(t => t.thread).SingleOrDefault(m => m.ForumId == (int)id);
 
             return View(ThreadVM);
