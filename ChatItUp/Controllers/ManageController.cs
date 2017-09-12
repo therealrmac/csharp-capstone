@@ -10,6 +10,8 @@ using Microsoft.Extensions.Options;
 using ChatItUp.Models;
 using ChatItUp.Models.ManageViewModels;
 using ChatItUp.Services;
+using ChatItUp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatItUp.Controllers
 {
@@ -22,6 +24,7 @@ namespace ChatItUp.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
+        private readonly ApplicationDbContext _context; 
 
         public ManageController(
           UserManager<ApplicationUser> userManager,
@@ -29,7 +32,8 @@ namespace ChatItUp.Controllers
           IOptions<IdentityCookieOptions> identityCookieOptions,
           IEmailSender emailSender,
           ISmsSender smsSender,
-          ILoggerFactory loggerFactory)
+          ILoggerFactory loggerFactory,
+          ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -37,6 +41,7 @@ namespace ChatItUp.Controllers
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<ManageController>();
+            _context = context;
         }
 
         //
@@ -64,7 +69,8 @@ namespace ChatItUp.Controllers
                 PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
                 TwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
                 Logins = await _userManager.GetLoginsAsync(user),
-                BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user)
+                BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
+                ApplicationUser = user
             };
             return View(model);
         }
@@ -341,6 +347,70 @@ namespace ChatItUp.Controllers
             return RedirectToAction(nameof(ManageLogins), new { Message = message });
         }
 
+        //BY: RYAN MCCARTY
+        [Authorize]
+        public async Task<IActionResult> EditProfile()
+        {
+            //GET THE CURRENT USER
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                return NotFound("Error");
+            }
+
+            IndexViewModel User = new IndexViewModel()
+            {
+                ApplicationUser = user
+            };
+
+
+            if (User.ApplicationUser == null)
+            {
+                return NotFound();
+            }
+            return View();
+        }
+
+
+        //BY: RYAN MCCARTY
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProfile( IndexViewModel IndVM)
+        {
+            if (IndVM == null)
+            {
+                throw new ArgumentNullException(nameof(IndVM));
+            }
+            //PASS IN ALL THE VALUES FROM THE VIEW MODEL THAT WILL BE UPDATED
+            var user = await GetCurrentUserAsync();
+            user.Firstname = IndVM.ApplicationUser.Firstname;
+            user.Lastname = IndVM.ApplicationUser.Lastname;
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ApplicationUserExists(IndVM.ApplicationUser.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            return View("Index");
+        }
+
+
         #region Helpers
 
         private void AddErrors(IdentityResult result)
@@ -369,5 +439,12 @@ namespace ChatItUp.Controllers
         }
 
         #endregion
+
+
+        //CHECKS TO SEE IF THE USERID EXISTS 
+        private bool ApplicationUserExists(string id)
+        {
+            return _context.ApplicationUser.Any(e => e.Id == id);
+        }
     }
 }

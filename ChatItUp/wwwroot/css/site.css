@@ -17,6 +17,11 @@ textarea {
     max-width: 280px;
 }
 
+.catImg{
+    max-width: 25%;
+    margin-top: 80px;
+}
+
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;

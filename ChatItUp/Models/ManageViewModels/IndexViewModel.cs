@@ -17,5 +17,16 @@ namespace ChatItUp.Models.ManageViewModels
         public bool TwoFactor { get; set; }
 
         public bool BrowserRemembered { get; set; }
+
+        public ApplicationUser ApplicationUser { get; set; }
+        public ICollection<ThreadPost> threadPost { get; set; }
+
+        public ICollection<Thread> thread { get; set; }
+
+        public ICollection<Relation> friends { get; set; }
+        public IndexViewModel()
+        {
+            ApplicationUser = new ApplicationUser();
+        }
     }
 }

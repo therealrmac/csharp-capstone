@@ -1,0 +1,36 @@
+@model ChatItUp.Models.ThreadPost
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ThreadPost</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.message)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.message)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.dateCreatd)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.dateCreatd)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Thread)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Thread.ThreadId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ThreadPostId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

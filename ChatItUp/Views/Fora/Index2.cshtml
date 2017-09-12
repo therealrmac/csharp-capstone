@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ChatItUp.Models.Forum>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ThreadTitles)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="Threads" asp-action="Index" asp-route-id="@item.ForumId">
+                    @Html.DisplayFor(modelItem => item.ThreadTitles)
+                        </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryId)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,44 @@
+@model ChatItUp.Models.Thread
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>New Thread</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Thread</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Title" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="ForumId"/>
+
+        <div class="form-group">
+            <label asp-for="AuthorMessage" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <textarea asp-for="AuthorMessage" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
