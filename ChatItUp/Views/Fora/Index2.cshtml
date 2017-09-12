@@ -11,11 +11,9 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ThreadTitles)
+               <span>Thread</span>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -29,7 +27,7 @@
                         </a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Category.CategoryId)
+                    @Html.DisplayFor(modelItem => item.thread)
                 </td>
 
             </tr>

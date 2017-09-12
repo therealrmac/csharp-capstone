@@ -23,9 +23,9 @@
                     <span>Created</span>
                 </th>
             <th>
-                <span>Forum</span>
+                <span>Author</span>
             </th>
-            <th></th>
+            <th>Forum</th>
         </tr>
     </thead>
     <tbody>
@@ -38,6 +38,13 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.created)
+            </td>
+            <td>
+                <span>
+                    By:
+                    @Html.DisplayFor(modelItem => item.User.Firstname)
+                    @Html.DisplayFor(modelItem => item.User.Lastname)
+                </span>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Forum.ThreadTitles)

@@ -35,7 +35,7 @@ namespace ChatItUp.Controllers
                 return NotFound();
             }
             ThreadPostVM.threadpost = await _context.ThreadPost.Include(t => t.Thread).Include(u => u.user).Where(tp => tp.ThreadId == (int)id).ToListAsync();
-            ThreadPostVM.Thread =  _context.Thread.Include(t => t.ThreadPost).SingleOrDefault(tp => tp.ThreadId == (int)id);
+            ThreadPostVM.Thread =  _context.Thread.Include(t => t.ThreadPost).Include(u => u.User).SingleOrDefault(tp => tp.ThreadId == (int)id);
             
 
 
@@ -69,6 +69,7 @@ namespace ChatItUp.Controllers
 
             var thread= await _context.Thread
                 .Where(t => t.ThreadId == threadpost.ThreadId).ToListAsync();
+
             var user = await GetCurrentUserAsync();
             ViewData["ThreadId"] = new SelectList(_context.Thread, "ThreadId", "ThreadId");
             return View(threadpost);
