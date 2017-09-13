@@ -1,27 +1,15 @@
 ﻿@model IndexViewModel
 
 
-
 @{
-
     ViewData["Title"] = "View";
-
 }
-
-
 
 <h2>Edit Profile</h2>
 
-@*Call method EditProfile
-
-    Tamela Lerma
-
-*@
-
-<form asp-action="EditProfile">
+<form asp-action="EditProfile" >
 
     <div class="form-horizontal">
-
         <h4>Edit Your Profile</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -47,6 +35,11 @@
                 <input type="hidden" asp-for="ApplicationUser.Email" class="form-control" />
             </div>
         </div>
+        <label asp-for="ApplicationUser.ProfileImage">Set Profile Image:</label>
+        <input asp-for="ApplicationUser.ProfileImage" class="form-control" type="file" accept="image/*" /><br><br>
+
+        <label asp-for="ApplicationUser.BannerImage">Set Banner Image:</label>
+        <input asp-for="ApplicationUser.BannerImage" class="form-control" type="file" accept="image/*" /><br><br>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />

@@ -12,6 +12,9 @@ using ChatItUp.Models.ManageViewModels;
 using ChatItUp.Services;
 using ChatItUp.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ChatItUp.Controllers
 {
@@ -24,7 +27,8 @@ namespace ChatItUp.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
-        private readonly ApplicationDbContext _context; 
+        private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _environment;
 
         public ManageController(
           UserManager<ApplicationUser> userManager,
@@ -33,7 +37,8 @@ namespace ChatItUp.Controllers
           IEmailSender emailSender,
           ISmsSender smsSender,
           ILoggerFactory loggerFactory,
-          ApplicationDbContext context)
+          ApplicationDbContext context,
+          IHostingEnvironment environment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -42,6 +47,7 @@ namespace ChatItUp.Controllers
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<ManageController>();
             _context = context;
+            _environment = environment;
         }
 
         //
@@ -386,11 +392,45 @@ namespace ChatItUp.Controllers
             var user = await GetCurrentUserAsync();
             user.Firstname = IndVM.ApplicationUser.Firstname;
             user.Lastname = IndVM.ApplicationUser.Lastname;
+            user.ProfileImage = IndVM.ApplicationUser.ProfileImage;
+            user.BannerImage = IndVM.ApplicationUser.BannerImage;
+
+          
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    foreach (var file in IndVM.profileImg)
+                    {
+                        var filename = ContentDispositionHeaderValue
+                                        .Parse(file.ContentDisposition)
+                                        .FileName
+                                        .Trim('"');
+                        filename = _environment.WebRootPath + $@"\Profile\{file.FileName.Split('\\').Last()}";
+
+                        using (var fileStream = new FileStream(filename, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                            IndVM.path = $@"\Profile\{file.FileName.Split('\\').Last()}";
+                        }
+                    }
+
+                    foreach (var file in IndVM.bannerImg)
+                    {
+                        var filename = ContentDispositionHeaderValue
+                                        .Parse(file.ContentDisposition)
+                                        .FileName
+                                        .Trim('"');
+                        filename = _environment.WebRootPath + $@"\Profile\{file.FileName.Split('\\').Last()}";
+
+                        using (var fileStream = new FileStream(filename, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                            IndVM.path = $@"\Profile\{file.FileName.Split('\\').Last()}";
+                        }
+                    }
+
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }

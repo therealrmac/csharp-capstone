@@ -16,6 +16,7 @@ namespace ChatItUp.Models
         public ApplicationUser User { get; set; }
 
         [Required]
+
         public ApplicationUser Friend { get; set; }
 
         [Required]

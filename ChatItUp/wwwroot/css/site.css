@@ -19,6 +19,9 @@
     font-size: 1.6rem;
     color: gray;
 }
+.smallimg{
+    max-width: 4%;
+}
 
 
 @media (max-width:768px) {

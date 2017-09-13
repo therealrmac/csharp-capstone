@@ -12,6 +12,9 @@ using Microsoft.Extensions.Options;
 using ChatItUp.Models;
 using ChatItUp.Models.AccountViewModels;
 using ChatItUp.Services;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace ChatItUp.Controllers
 {
@@ -24,6 +27,7 @@ namespace ChatItUp.Controllers
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
         private readonly string _externalCookieScheme;
+        private readonly IHostingEnvironment _environment;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -31,7 +35,8 @@ namespace ChatItUp.Controllers
             IOptions<IdentityCookieOptions> identityCookieOptions,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IHostingEnvironment environment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -39,6 +44,7 @@ namespace ChatItUp.Controllers
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<AccountController>();
+            _environment = environment;
         }
 
         //
@@ -112,7 +118,22 @@ namespace ChatItUp.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Firstname= model.firstname, Lastname= model.lastname};
+                foreach (var file in model.profileImg)
+                {
+                    var filename = ContentDispositionHeaderValue
+                                    .Parse(file.ContentDisposition)
+                                    .FileName
+                                    .Trim('"');
+                    filename = _environment.WebRootPath + $@"\Profile\{file.FileName.Split('\\').Last()}";
+                   
+                    using (var fileStream = new FileStream(filename, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                        model.path = $@"\Profile\{file.FileName.Split('\\').Last()}";
+                    }
+                }
+
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Firstname= model.firstname, Lastname= model.lastname, ProfileImage= model.path};
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
