@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace ChatItUp.Models.ManageViewModels
 {
@@ -28,5 +30,12 @@ namespace ChatItUp.Models.ManageViewModels
         {
             ApplicationUser = new ApplicationUser();
         }
+        [Display(Name = "Profile Picture")]
+        public List<IFormFile> profileImg { get; set; } = new List<IFormFile>();
+        public string path { get; set; }
+
+        [Display(Name = "Banner Image")]
+        public List<IFormFile> bannerImg { get; set; } = new List<IFormFile>();
+        public string path2 { get; set; }
     }
 }

@@ -7,23 +7,77 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ChatItUp.Data;
 using ChatItUp.Models;
+using Microsoft.AspNetCore.Identity;
+using ChatItUp.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChatItUp.Controllers
 {
     public class RelationsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public RelationsController(ApplicationDbContext context)
+        public RelationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;    
+            _context = context;
+            _userManager = userManager;
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Relations
         public async Task<IActionResult> Index()
         {
             return View(await _context.Relation.ToListAsync());
         }
+
+        //GET: USER PROFILE
+        public async Task<IActionResult> UserProfile(string id)
+        {
+            UserProfileViewModel upVM = new UserProfileViewModel();
+            var user = await GetCurrentUserAsync();
+            if(id == null)
+            {
+                return NotFound();
+            }
+            if(id == user.Id)
+            {
+                return RedirectToAction("Index", "Manage");
+            }
+
+        
+         
+
+            upVM.User = await _context.ApplicationUser.Where(u => u.Id == id).SingleOrDefaultAsync();
+
+            return View(upVM);
+        }
+
+        //AddFriend Post
+        [HttpPost]
+        public async Task<IActionResult> AddFriend(ApplicationUser user)
+        {
+            
+            var currentUser = await GetCurrentUserAsync();
+            if(currentUser == null)
+            {
+                return NotFound();
+            }
+
+            ApplicationUser userFriend = await _context.ApplicationUser.Where(u => u.Id == user.Id).SingleOrDefaultAsync();
+
+            var relationB = new Relation() {User = currentUser, Friend = userFriend};
+
+
+
+            _context.Add(relationB);
+            await _context.SaveChangesAsync();
+
+
+           return RedirectToAction("UserProfile", new {id= userFriend.Id });
+        }
+
 
         // GET: Relations/Details/5
         public async Task<IActionResult> Details(int? id)

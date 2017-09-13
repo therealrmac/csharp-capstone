@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -28,5 +29,9 @@ namespace ChatItUp.Models.AccountViewModels
         public string firstname { get; set; }
         [Display(Name = "Last Name")]
         public string lastname { get; set; }
+
+        [Display(Name = "Profile Picture")]
+        public List<IFormFile> profileImg { get; set; } = new List<IFormFile>();
+        public string path { get; set; }
     }
 }

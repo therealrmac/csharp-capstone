@@ -1,0 +1,33 @@
+﻿@model ChatItUp.Models.ViewModels.UserProfileViewModel
+
+@{
+
+    ViewData["Title"] = "Manage your account";
+
+}
+
+@if(Model.relation.User.Id == Model.User.Id)
+{
+
+}
+
+
+<h2>@ViewData["Title"].</h2>
+
+<p class="text-success">@ViewData["StatusMessage"]</p>
+
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<div class="container">
+    <div class="fb-profile">
+        <img align="left" class="fb-image-lg" src="@Model.User.BannerImage" alt="Profile image example" />
+        <img align="left" class="fb-image-profile thumbnail" src="@Model.User.ProfileImage" alt="Profile image example" />
+        <div class="fb-profile-text">
+            <h1>@Model.User.Firstname @Model.User.Lastname</h1>
+            <form asp-method="post" asp-action="AddFriend" asp-controller="Relations">
+                <input type="hidden" asp-for="@Model.User.Id"/>
+            <button type="submit" class="btn btn-default">Add</button>
+                </form>
+        </div>
+    </div>
+    
+</div>
