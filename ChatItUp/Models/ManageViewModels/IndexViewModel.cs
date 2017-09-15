@@ -37,5 +37,7 @@ namespace ChatItUp.Models.ManageViewModels
         [Display(Name = "Banner Image")]
         public List<IFormFile> bannerImg { get; set; } = new List<IFormFile>();
         public string path2 { get; set; }
+
+        public List<Relation> friendList { get; set; }
     }
 }

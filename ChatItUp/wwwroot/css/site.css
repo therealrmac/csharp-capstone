@@ -9,6 +9,11 @@
     margin-bottom: 10px;
 }
 
+.scrolling {
+    height: 300px;
+    overflow-y: auto;
+}
+
 .fb-image-profile {
     margin: -90px 10px 0px 50px;
     z-index: 9;

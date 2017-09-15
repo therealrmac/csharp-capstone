@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Relation>
+
+    <div class="container">
+@foreach(var item in Model )
+{
+    <img src="@item.User.ProfileImage" class="smallimg" />
+    <span> @item.User.Firstname @item.User.Lastname </span>
+    <form asp-method="post" asp-action="ConfirmRequest" asp-controller="Manage">
+        <input type="hidden" value="@item.Friend.Id" name="user"/>
+        <button type="submit" class="btn btn-default">Accept</button>
+    </form>
+    <form asp-method="post" asp-action="DeclineRequest" asp-controller="Manage">
+        <input type="hidden" value="@item.Friend.Id" name="user"/>
+        <button type="submit" class="btn btn-default">Decline</button>
+    </form>
+}
+</div>

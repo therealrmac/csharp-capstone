@@ -22,7 +22,24 @@
             
         </div>
     </div>
+    <div class="col-sm-4 offset-lg-5 scrolling">
+        <div>
+            <h4>Friends</h4>
+            @foreach (var item in Model.friendList)
+            {
+                <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.Friend.Id">
+                    <img src=" @item.Friend.ProfileImage" alt="img" class="smallimg" />
+                    @Html.DisplayFor(modelItem => item.Friend.Firstname)
+                    @Html.DisplayFor(x => item.Friend.Lastname)
+                </a>
+
+            }
+
+        </div>
+
+    </div>
+
+
     <a asp-action="EditProfile" class="btn btn-default">Edit Profile</a>
 </div>
-
 
