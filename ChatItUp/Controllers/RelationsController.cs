@@ -45,11 +45,20 @@ namespace ChatItUp.Controllers
             {
                 return RedirectToAction("Index", "Manage");
             }
+            var userFriend = await _context.ApplicationUser.SingleOrDefaultAsync(x => x.Id == id);
 
-        
-         
+            var CheckConnectedButNotConfirmed =  _context.Relation.Any(x => x.Friend == userFriend &&  x.User.Id == user.Id && x.Connected == null);
 
+            var CheckConnectedAndConfirmed = _context.Relation.Any(x => x.Friend == userFriend && x.User.Id == user.Id && x.Connected == true);
+
+            var CheckConnectedAndConfirmed2 = _context.Relation.Any(x => x.User == userFriend && x.Friend.Id == user.Id && x.Connected == true);
+            var completeFriendList = await _context.Relation.Include("Friend").Where(x => x.User == user && x.Connected == true).ToListAsync();
+
+            upVM.checkconnectedbutnotconfirmed = CheckConnectedButNotConfirmed;
+            upVM.checkConnectedAndConfirmed = CheckConnectedAndConfirmed;
+            upVM.checkConnectedAndConfirmed2 = CheckConnectedAndConfirmed2;
             upVM.User = await _context.ApplicationUser.Where(u => u.Id == id).SingleOrDefaultAsync();
+            upVM.friendList = completeFriendList;
 
             return View(upVM);
         }
@@ -77,6 +86,31 @@ namespace ChatItUp.Controllers
 
            return RedirectToAction("UserProfile", new {id= userFriend.Id });
         }
+
+
+
+        //DELETEFRIEND POST
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveFriend(string id)
+        {
+            var currentUser = await GetCurrentUserAsync();
+            if(currentUser == null)
+            {
+                return NotFound();
+            }
+            ApplicationUser userFriend = await _context.ApplicationUser.SingleOrDefaultAsync(x => x.Id == id);
+
+            var friend = _context.Relation.Include("User").Single(x => x.Friend == currentUser && x.Connected == true); 
+
+
+
+            _context.Remove(friend);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("UserProfile", new { id = userFriend.Id });
+
+        }
+
 
 
         // GET: Relations/Details/5

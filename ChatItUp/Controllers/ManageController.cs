@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using ChatItUp.Models.ViewModels;
 
 namespace ChatItUp.Controllers
 {
@@ -69,6 +70,10 @@ namespace ChatItUp.Controllers
             {
                 return View("Error");
             }
+            var completeFriendList = await _context.Relation.Include("Friend").Where(x => x.User == user && x.Connected == true).ToListAsync();
+
+
+
             var model = new IndexViewModel
             {
                 HasPassword = await _userManager.HasPasswordAsync(user),
@@ -76,10 +81,74 @@ namespace ChatItUp.Controllers
                 TwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
                 Logins = await _userManager.GetLoginsAsync(user),
                 BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
-                ApplicationUser = user
+                ApplicationUser = user,
+                friendList = completeFriendList
             };
             return View(model);
         }
+
+        //GET LIST OF FRIEND REQUESTS 
+        public async Task<IActionResult> Requests()
+        {
+            RequestViewModel request = new RequestViewModel();
+            var user = await GetCurrentUserAsync();
+            if(user == null)
+            {
+                return NotFound();
+            }
+            var incomingRequests =  _context.Relation.Include("User").Where(x => x.Friend == user && x.Connected == null);
+
+
+            return View(incomingRequests);
+
+        }
+
+
+
+        //ACCEPT FRIEND REQUEST POST
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ConfirmRequest(string user)
+        {
+            var currentUser = await GetCurrentUserAsync();
+
+
+            ApplicationUser userFriend = await _context.ApplicationUser.Where(u => u.Id == user).SingleOrDefaultAsync();
+
+            var connectedRelation = _context.Relation.Include("User").Single(x => x.Friend == currentUser && x.Connected == null);
+
+            connectedRelation.Connected = true;
+
+            _context.Update(connectedRelation);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Requests", "Manage");
+
+        }
+
+        //Decline FRIEND REQUEST POST
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeclineRequest(string user)
+        {
+            var currentUser = await GetCurrentUserAsync();
+
+            ApplicationUser userFriend = await _context.ApplicationUser.Where(u => u.Id == user).SingleOrDefaultAsync();
+
+            var connectedRelation = _context.Relation.Include("User").Single(x => x.Friend == currentUser && x.Connected == null);
+
+           
+
+            _context.Remove(connectedRelation);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Requests", "Manage");
+
+        }
+
+
+
+
 
         //
         // POST: /Manage/RemoveLogin

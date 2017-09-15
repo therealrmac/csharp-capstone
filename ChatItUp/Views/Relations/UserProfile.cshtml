@@ -1,18 +1,6 @@
 ﻿@model ChatItUp.Models.ViewModels.UserProfileViewModel
 
-@{
 
-    ViewData["Title"] = "Manage your account";
-
-}
-
-@if(Model.relation.User.Id == Model.User.Id)
-{
-
-}
-
-
-<h2>@ViewData["Title"].</h2>
 
 <p class="text-success">@ViewData["StatusMessage"]</p>
 
@@ -23,10 +11,47 @@
         <img align="left" class="fb-image-profile thumbnail" src="@Model.User.ProfileImage" alt="Profile image example" />
         <div class="fb-profile-text">
             <h1>@Model.User.Firstname @Model.User.Lastname</h1>
-            <form asp-method="post" asp-action="AddFriend" asp-controller="Relations">
-                <input type="hidden" asp-for="@Model.User.Id"/>
-            <button type="submit" class="btn btn-default">Add</button>
+            @if (Model.checkconnectedbutnotconfirmed)
+            {
+                 <button type="submit" class="btn btn-default" disabled>Request Sent</button>
+            }
+            @if (Model.checkConnectedAndConfirmed)
+            {
+                <form asp-method="post" asp-action="RemoveFriend" asp-controller="Relations">
+                    <input type="hidden" value="@Model.User.Id" name="id" />
+                    <button type="submit" class="btn btn-default">Remove</button>
                 </form>
+            }
+            @if (Model.checkConnectedAndConfirmed2)
+            {
+                <form asp-method="post" asp-action="RemoveFriend" asp-controller="Relations">
+                    <input type="hidden" value="@Model.User.Id" name="id" />
+                    <button type="submit" class="btn btn-default">Remove</button>
+                </form>
+            }
+            @if (Model.checkConnectedAndConfirmed == false && Model.checkConnectedAndConfirmed2 == false && Model.checkconnectedbutnotconfirmed == false)
+            {
+            <form asp-method="post" asp-action="AddFriend" asp-controller="Relations">
+                    <input type="hidden" asp-for="@Model.User.Id" />
+                    <button type="submit" class="btn btn-default">Add</button>
+            </form> 
+            }
+            <div class="col-sm-4 offset-lg-5 scrolling">
+                <div>
+                    <h4>Friends</h4>
+                    @foreach (var item in Model.friendList)
+            {
+                        <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.User.Id">
+                            <img src=" @item.User.ProfileImage" alt="img" class="smallimg" />
+                            @Html.DisplayFor(modelItem => item.User.Firstname)
+                            @Html.DisplayFor(x => item.User.Lastname)
+                        </a>
+
+                    }
+
+                </div>
+
+            </div>
         </div>
     </div>
     
