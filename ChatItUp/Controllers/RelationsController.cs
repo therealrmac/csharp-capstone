@@ -53,12 +53,14 @@ namespace ChatItUp.Controllers
 
             var CheckConnectedAndConfirmed2 = _context.Relation.Any(x => x.User == userFriend && x.Friend.Id == user.Id && x.Connected == true);
             var completeFriendList = await _context.Relation.Include("Friend").Where(x => x.User == user && x.Connected == true).ToListAsync();
+            var completeFriendList2 = await _context.Relation.Include("User").Where(x => x.Friend == user && x.Connected == true).ToListAsync();
 
             upVM.checkconnectedbutnotconfirmed = CheckConnectedButNotConfirmed;
             upVM.checkConnectedAndConfirmed = CheckConnectedAndConfirmed;
             upVM.checkConnectedAndConfirmed2 = CheckConnectedAndConfirmed2;
             upVM.User = await _context.ApplicationUser.Where(u => u.Id == id).SingleOrDefaultAsync();
             upVM.friendList = completeFriendList;
+            upVM.friendList2 = completeFriendList2;
 
             return View(upVM);
         }
@@ -101,11 +103,19 @@ namespace ChatItUp.Controllers
             }
             ApplicationUser userFriend = await _context.ApplicationUser.SingleOrDefaultAsync(x => x.Id == id);
 
-            var friend = _context.Relation.Include("User").Single(x => x.Friend == currentUser && x.Connected == true); 
+            var friendIdIsCurrentUser = _context.Relation.Include("Friend").Single(x => x.User == currentUser && x.Connected == true);
+            if (friendIdIsCurrentUser != null)
+            {
+                _context.Remove(friendIdIsCurrentUser);
+            }
 
+            var friendIdIsYourFriend = _context.Relation.Include("User").Single(x => x.Friend == userFriend && x.Connected == true);
+            if(friendIdIsYourFriend != null)
+            {
+                _context.Remove(friendIdIsYourFriend);
+            }
 
-
-            _context.Remove(friend);
+           
             await _context.SaveChangesAsync();
             return RedirectToAction("UserProfile", new { id = userFriend.Id });
 

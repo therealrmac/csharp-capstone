@@ -1,0 +1,40 @@
+﻿@model ChatItUp.Models.ViewModels.UserListViewModel
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+           
+        </tr>
+    </thead>
+
+    @if (Model.user != null)
+    {
+    @foreach (var item in Model.user)
+    {
+        <tr>
+            <td>
+                <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.Id">
+                   <span>@item.Firstname @item.Lastname</span>
+                </a>
+           </td>
+            </tr>
+    }
+    }
+
+    @if (Model.forum != null)
+    {
+    @foreach (var item in Model.forum)
+    {
+        <tr>
+            <td>
+                <a asp-controller="Threads" asp-action="Index" asp-route-id="@item.ForumId">
+                    <span>@item.ThreadTitles</span>
+                </a>
+            </td>
+
+        </tr>
+    }
+    }
+
+</table>

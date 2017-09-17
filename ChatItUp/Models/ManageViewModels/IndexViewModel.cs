@@ -26,18 +26,17 @@ namespace ChatItUp.Models.ManageViewModels
         public ICollection<Thread> thread { get; set; }
 
         public ICollection<Relation> friends { get; set; }
-        public IndexViewModel()
-        {
-            ApplicationUser = new ApplicationUser();
-        }
+
         [Display(Name = "Profile Picture")]
-        public List<IFormFile> profileImg { get; set; } = new List<IFormFile>();
-        public string path { get; set; }
+        public IFormFile profileImg { get; set; }
+
 
         [Display(Name = "Banner Image")]
-        public List<IFormFile> bannerImg { get; set; } = new List<IFormFile>();
-        public string path2 { get; set; }
+        public IFormFile bannerImg { get; set; } 
+
 
         public List<Relation> friendList { get; set; }
+        public List<ThreadPost>totalPosts { get; set; }
+        public List<Relation> friendList2 { get; set; }
     }
 }

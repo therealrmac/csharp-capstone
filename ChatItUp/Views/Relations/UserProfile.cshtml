@@ -40,11 +40,21 @@
                 <div>
                     <h4>Friends</h4>
                     @foreach (var item in Model.friendList)
-            {
+                    {
                         <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.User.Id">
                             <img src=" @item.User.ProfileImage" alt="img" class="smallimg" />
                             @Html.DisplayFor(modelItem => item.User.Firstname)
                             @Html.DisplayFor(x => item.User.Lastname)
+                        </a>
+
+                    }
+
+                    @foreach (var item in Model.friendList2)
+                    {
+                        <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.Friend.Id">
+                            <img src=" @item.Friend.ProfileImage" alt="img" class="smallimg" />
+                            @Html.DisplayFor(modelItem => item.Friend.Firstname)
+                            @Html.DisplayFor(x => item.Friend.Lastname)
                         </a>
 
                     }

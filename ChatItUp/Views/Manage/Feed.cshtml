@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Relation>
+
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+
+            @foreach (var xitem in item.Friend.ThreadPosts)
+            {
+                <div class="message-item" id="m5">
+                    <div class="message-inner">
+                        <div class="message-head clearfix">
+                            <div class="avatar pull-left">
+                                <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@xitem.user.Id">
+                                    <img src="@xitem.user.ProfileImage" class="feedImg"/>
+                                    </a>
+                        </div>
+                            <div class="user-detail">
+                                
+                                <div class="post-meta">
+                                    <div class="asker-meta">
+                                        <span class="qa-message-what"></span>
+                                        <span class="qa-message-when">
+                                            <span class="qa-message-when-data">@xitem.dateCreatd</span>
+                                        </span>
+                                        <span class="qa-message-who">
+
+                                            <span class="qa-message-who-pad">by </span>
+                                            <span class="qa-message-who-data"><a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@xitem.user.Id">@xitem.user.Firstname @xitem.user.Lastname</a></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a asp-controller="ThreadPosts" asp-action="Index" asp-route-id="@xitem.ThreadId">Jump to Thread </a>
+                            <div class="qa-message-content">
+                                @xitem.message
+                            </div>
+                       
+</div>
+                </div>
+
+            }
+        }
+        </div>
+    </div>
