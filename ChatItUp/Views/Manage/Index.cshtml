@@ -11,7 +11,7 @@
 <h2>@ViewData["Title"].</h2>
 
 <p class="text-success">@ViewData["StatusMessage"]</p>
-
+<a asp-action="EditProfile" class="btn btn-default">Edit Profile</a>
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <div class="container">
     <div class="fb-profile">
@@ -22,6 +22,7 @@
             
         </div>
     </div>
+    <hr />
     <div class="col-sm-4 offset-lg-5 scrolling">
         <div>
             <h4>Friends</h4>
@@ -34,12 +35,25 @@
                 </a>
 
             }
+            
+            @foreach (var item in Model.friendList2)
+            {
+                <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.User.Id">
+                    <img src=" @item.User.ProfileImage" alt="img" class="smallimg" />
+                    @Html.DisplayFor(modelItem => item.User.Firstname)
+                    @Html.DisplayFor(x => item.User.Lastname)
+                </a>
+
+            }
 
         </div>
 
     </div>
+    @foreach(var item in Model.totalPosts)
+    {
+        <span>@item.message.Count()</span>
+    }
 
 
-    <a asp-action="EditProfile" class="btn btn-default">Edit Profile</a>
 </div>
 

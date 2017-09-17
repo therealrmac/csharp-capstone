@@ -18,5 +18,6 @@ namespace ChatItUp.Models.ViewModels
         public bool checkConnectedAndConfirmed { get; set; }
         public bool checkConnectedAndConfirmed2 { get; set; }
         public List<Relation> friendList { get; set; }
+        public List<Relation> friendList2 { get; set; }
     }
 }

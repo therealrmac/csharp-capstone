@@ -16,6 +16,7 @@ namespace ChatItUp.Models
         public string Title { get; set; }
 
         [Required]
+        [Display(Name = "Message")]
         public string AuthorMessage { get; set; }
 
         [Required]

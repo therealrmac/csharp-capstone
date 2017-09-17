@@ -71,7 +71,8 @@ namespace ChatItUp.Controllers
                 return View("Error");
             }
             var completeFriendList = await _context.Relation.Include("Friend").Where(x => x.User == user && x.Connected == true).ToListAsync();
-
+            var FriendList = await _context.Relation.Include("User").Where(x => x.Friend == user && x.Connected == true).ToListAsync();
+            var posts = await _context.ThreadPost.Where(x => x.user == user).ToListAsync();
 
 
             var model = new IndexViewModel
@@ -82,7 +83,9 @@ namespace ChatItUp.Controllers
                 Logins = await _userManager.GetLoginsAsync(user),
                 BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
                 ApplicationUser = user,
-                friendList = completeFriendList
+                friendList = completeFriendList,
+                totalPosts = posts,
+                friendList2= FriendList
             };
             return View(model);
         }
@@ -146,7 +149,25 @@ namespace ChatItUp.Controllers
 
         }
 
+        //GET User Post Feed
+        public async Task<IActionResult> Feed()
+        {
+            
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var yourFriends = await _context.Relation
+                .Include(x => x.Friend)
+                 .ThenInclude(y => y.ThreadPosts)
+                .Where(x => x.User == user && x.Connected == true).ToListAsync();
 
+
+
+            return View(yourFriends);
+
+        }
 
 
 
@@ -461,44 +482,40 @@ namespace ChatItUp.Controllers
             var user = await GetCurrentUserAsync();
             user.Firstname = IndVM.ApplicationUser.Firstname;
             user.Lastname = IndVM.ApplicationUser.Lastname;
-            user.ProfileImage = IndVM.ApplicationUser.ProfileImage;
-            user.BannerImage = IndVM.ApplicationUser.BannerImage;
 
-          
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    foreach (var file in IndVM.profileImg)
-                    {
+                   
                         var filename = ContentDispositionHeaderValue
-                                        .Parse(file.ContentDisposition)
+                                        .Parse(IndVM.profileImg.ContentDisposition)
                                         .FileName
                                         .Trim('"');
-                        filename = _environment.WebRootPath + $@"\Profile\{file.FileName.Split('\\').Last()}";
+                        filename = _environment.WebRootPath + $@"\Profile\{IndVM.profileImg.FileName.Split('\\').Last()}";
 
                         using (var fileStream = new FileStream(filename, FileMode.Create))
                         {
-                            await file.CopyToAsync(fileStream);
-                            IndVM.path = $@"\Profile\{file.FileName.Split('\\').Last()}";
+                            await IndVM.profileImg.CopyToAsync(fileStream);
+                            user.ProfileImage = $@"\Profile\{IndVM.profileImg.FileName.Split('\\').Last()}";
                         }
-                    }
+                    
 
-                    foreach (var file in IndVM.bannerImg)
-                    {
-                        var filename = ContentDispositionHeaderValue
-                                        .Parse(file.ContentDisposition)
+                        var filename2 = ContentDispositionHeaderValue
+                                        .Parse(IndVM.bannerImg.ContentDisposition)
                                         .FileName
                                         .Trim('"');
-                        filename = _environment.WebRootPath + $@"\Profile\{file.FileName.Split('\\').Last()}";
+                        filename2 = _environment.WebRootPath + $@"\Profile\{
+                            IndVM.bannerImg.FileName.Split('\\').Last()}";
 
-                        using (var fileStream = new FileStream(filename, FileMode.Create))
+                        using (var fileStream = new FileStream(filename2, FileMode.Create))
                         {
-                            await file.CopyToAsync(fileStream);
-                            IndVM.path = $@"\Profile\{file.FileName.Split('\\').Last()}";
+                            await IndVM.bannerImg.CopyToAsync(fileStream);
+                            user.BannerImage = $@"\Profile\{
+                                IndVM.bannerImg.FileName.Split('\\').Last()}";
                         }
-                    }
+                    
 
                     _context.Update(user);
                     await _context.SaveChangesAsync();
@@ -517,6 +534,23 @@ namespace ChatItUp.Controllers
                 return RedirectToAction("Index");
             }
             return View("Index");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Search(string searchFor, string searchText)
+        {
+            UserListViewModel viewModel = new UserListViewModel();
+
+            if (!String.IsNullOrEmpty(searchText) && searchFor.Equals("People"))
+            {
+                viewModel.user = await _context.ApplicationUser.Where(s => s.Firstname.ToLower().Contains(searchText.ToLower()) || s.Lastname.ToLower().Contains(searchText.ToLower())).ToListAsync();
+            }
+            else if (!String.IsNullOrEmpty(searchText) && searchFor.Equals("Forum"))
+            {
+                viewModel.forum = await _context.Forum.Where(l => l.ThreadTitles.ToLower().Contains(searchText.ToLower())).ToListAsync();
+            }
+
+            return View(viewModel);
         }
 
 

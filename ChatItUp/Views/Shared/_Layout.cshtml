@@ -33,10 +33,25 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Categories" asp-action="Index">Start Chatting</a></li>
-                    <li><a asp-area="" asp-controller="Relations" asp-action="Index">Feed</a></li>
+                    <li><a asp-area="" asp-controller="Manage" asp-action="Feed">Feed</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     <li><a asp-area="" asp-controller="Manage" asp-action="Requests">Requests</a></li>
                 </ul>
+
+                <div class="navbar-left" style="margin-top:8px;">
+                    <form asp-controller="Manage" asp-action="Search" method="get">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <select name="SearchFor" class="nav navbar-nav">
+                                    <option value="People">People</option>"
+                                    <option value="Forum">Forum</option>
+                                </select>
+                            </li>
+                            <li><input type="text" name="SearchText" /></li>
+                            <li><input type="submit" value="Search" /></li>
+                        </ul>
+                    </form>
+                </div>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
