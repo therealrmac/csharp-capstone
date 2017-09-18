@@ -70,11 +70,23 @@ namespace ChatItUp.Controllers
             {
                 return View("Error");
             }
+            //LINQ FOR GETTING A LIST OF FRIENDS WHERE THE USER IS EQUAL TO THE CURRENT USER
             var completeFriendList = await _context.Relation.Include("Friend").Where(x => x.User == user && x.Connected == true).ToListAsync();
+            //END
+
+            //LINQ FOR GETTING A LIST OF FRIENDS WHERE THE USER IS EQUAL TO ID THAT WAS PASSED IN
             var FriendList = await _context.Relation.Include("User").Where(x => x.Friend == user && x.Connected == true).ToListAsync();
-            var posts = await _context.ThreadPost.Where(x => x.user == user).ToListAsync();
+            //END
 
+            //LINQ FOR GETTING A COUNT ALL OF THE CURRENT USERS THREADPOSTS
+            var posts = _context.ThreadPost.Where(x => x.user == user);
+            //END
 
+            //LINQ FOR GETTING A LIST OF THREADS CRAETED BY THE CURRENT USER
+            var threadsCretaed = await _context.Thread.Where(x => x.User == user).ToListAsync();
+            //END
+
+            //BINDING THESE VARIABLES TO THE VIEW MODEL
             var model = new IndexViewModel
             {
                 HasPassword = await _userManager.HasPasswordAsync(user),
@@ -85,7 +97,8 @@ namespace ChatItUp.Controllers
                 ApplicationUser = user,
                 friendList = completeFriendList,
                 totalPosts = posts,
-                friendList2= FriendList
+                friendList2= FriendList,
+                totalThreads= threadsCretaed
             };
             return View(model);
         }
@@ -99,8 +112,10 @@ namespace ChatItUp.Controllers
             {
                 return NotFound();
             }
-            var incomingRequests =  _context.Relation.Include("User").Where(x => x.Friend == user && x.Connected == null);
 
+            //LINQ FOR GETTING A ROW IN RELATION TABLE WHERE THE FRIENDID IS EQUAL TO THE CURRENT USER
+            var incomingRequests =  _context.Relation.Include("User").Where(x => x.Friend == user && x.Connected == null);
+            //END
 
             return View(incomingRequests);
 
@@ -118,10 +133,14 @@ namespace ChatItUp.Controllers
 
             ApplicationUser userFriend = await _context.ApplicationUser.Where(u => u.Id == user).SingleOrDefaultAsync();
 
+            //LINQ FOR FINDING ANY RELATION THAT MATCHES WHERE THE FRIEND COLUMN ON RELATION TABLE EQUALS THE CURRENT USER AND IS NOT CONNECTED
             var connectedRelation = _context.Relation.Include("User").Single(x => x.Friend == currentUser && x.Connected == null);
+            //END
 
+            //SETTING THE CONNECTED VALUE TO TRUE TO NOW SAY THAT THESE TWO USERS ARE FRIENDS
             connectedRelation.Connected = true;
 
+            //UPDATE THESE CHANGES AND SAVE THEM
             _context.Update(connectedRelation);
             await _context.SaveChangesAsync();
 
@@ -138,10 +157,11 @@ namespace ChatItUp.Controllers
 
             ApplicationUser userFriend = await _context.ApplicationUser.Where(u => u.Id == user).SingleOrDefaultAsync();
 
+            //LINQ FOR FINDING ANY RELATION THAT MATCHES WHERE THE FRIEND COLUMN ON RELATION TABLE EQUALS THE CURRENT USER AND IS NOT CONNECTED
             var connectedRelation = _context.Relation.Include("User").Single(x => x.Friend == currentUser && x.Connected == null);
-
+            //END
            
-
+            //TO "DECLINE" THE REQUEST, THE ENTIRE ROW WILL BE DELETED FROM THE DATABASE  AND SAVED
             _context.Remove(connectedRelation);
             await _context.SaveChangesAsync();
 
@@ -152,21 +172,33 @@ namespace ChatItUp.Controllers
         //GET User Post Feed
         public async Task<IActionResult> Feed()
         {
-            
+            FriendFeedViewModel ffVM = new FriendFeedViewModel();
             var user = await GetCurrentUserAsync();
             if (user == null)
             {
                 return NotFound();
             }
+
+            //LINQ FOR GETTING A LIST OF POSTS MADE BY A FRIEND FROM THE FRIEND COLUMN IN REALATION TABLE WHERE THE USER COLUMN IN RELATION TABLE IS THE CURRENT USER
             var yourFriends = await _context.Relation
                 .Include(x => x.Friend)
                  .ThenInclude(y => y.ThreadPosts)
                 .Where(x => x.User == user && x.Connected == true).ToListAsync();
+            //END
 
+            //LINQ FOR GETTING A LIST OF POSTS MADE BY FRIENDS FROM THE USER COLUMN IN REALTION WHERE FRIEND COLUMN IS THE CURRENT USER
+            var yourFriends2= await _context.Relation
+                .Include(x => x.User)
+                 .ThenInclude(y => y.ThreadPosts)
+                .Where(x => x.Friend == user && x.Connected == true).ToListAsync();
+            //END
 
+            //BIND THESE NEW VARIABLES TO THE VIEW MODEL
+            ffVM.relation1 = yourFriends;
+            ffVM.relation2 = yourFriends2;
 
-            return View(yourFriends);
-
+            return View(ffVM);
+           
         }
 
 
