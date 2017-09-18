@@ -36,7 +36,8 @@ namespace ChatItUp.Models.ManageViewModels
 
 
         public List<Relation> friendList { get; set; }
-        public List<ThreadPost>totalPosts { get; set; }
+        public IEnumerable<ThreadPost> totalPosts { get; set; }
         public List<Relation> friendList2 { get; set; }
+        public List<Thread> totalThreads { get; set; }
     }
 }

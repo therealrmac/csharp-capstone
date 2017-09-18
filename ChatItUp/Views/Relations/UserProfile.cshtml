@@ -38,7 +38,7 @@
             }
             <div class="col-sm-4 offset-lg-5 scrolling">
                 <div>
-                    <h4>Friends</h4>
+                    <h4>Friends     </h4>
                     @foreach (var item in Model.friendList)
                     {
                         <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.User.Id">
@@ -56,13 +56,34 @@
                             @Html.DisplayFor(modelItem => item.Friend.Firstname)
                             @Html.DisplayFor(x => item.Friend.Lastname)
                         </a>
-
                     }
 
                 </div>
 
             </div>
         </div>
+        <br />
+        <hr />
+
+        <div class="col-md-3">
+            <h3>Threads Created</h3>
+            <ul>
+                @foreach (var item in Model.totalThreads)
+                {
+                    <li><a asp-controller="ThreadPosts" asp-action="Index" asp-route-id="@item.ThreadId">@item.Title</a></li>
+                }
+            </ul>
+        </div>
+
+        <div class="col-md-3">
+            <h3>Total Posts Made</h3>
+            <ul>
+
+                <li>@Model.totalPosts.Count()</li>
+
+            </ul>
+        </div>
+
     </div>
     
 </div>

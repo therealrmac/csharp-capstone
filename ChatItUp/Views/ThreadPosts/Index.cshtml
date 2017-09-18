@@ -9,70 +9,89 @@
 <p>
     <a asp-action="Create" asp-route-id="@Model.Thread.ThreadId">Reply</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <span>By</span>
-            </th>
-                <th>
-                    <span>Message</span>
-                </th>
-                <th>
-                    <span>Created on</span>
-                </th>
 
-        </tr>
-    </thead>
+<div class="container">
+    <div class="row">
+        <span class="col-md-3">By</span>
 
-    <tbody>
+        <span class="col-md-4">Message</span>
 
-        <tr class="msg-update-boxes" >
-        <td>
-           <img src=" @Model.Thread.User.ProfileImage" alt="img" class="smallimg" />
+        <span class="col-lg-4">Created on</span>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="msg-update-boxes">
+        <span class="col-md-3">
+            <img src=" @Model.Thread.User.ProfileImage" alt="img" class="feedImg" />
             @Model.Thread.User.Firstname
             @Model.Thread.User.Lastname
-        </td>
-        <td >
-           @Model.Thread.AuthorMessage
-        </td>
-        <td>
-           @Model.Thread.created
-        </td>
+        </span>
+        <span class="col-md-4">
+            @Model.Thread.AuthorMessage
+        </span>
+        <span class="col-md-4">
+            @Model.Thread.created
+        </span>
+    </div>
+</div>
+<hr />
+<br />
+<br />
+@*<div class="container">
 
-
-        </tr>
-
-
-    </tbody>
- 
-
-
-    <tbody>
-        
-@foreach (var item in Model.threadpost) {
-        <tr>
-            <td>
+    @foreach (var item in Model.threadpost)
+    {
+        <div class="row">
+            <span class="col-md-3">
                 -Reply-
-                @*Place where a user can click a persons name and be taken to their profile*@
+                @*Place where a user can click a persons name and be taken to their profile
                 <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.user.Id">
-                <img src=" @item.user.ProfileImage" alt="img" class="smallimg" />
-                @Html.DisplayFor(modelItem => item.user.Firstname)
-                @Html.DisplayFor(x => item.user.Lastname)
-                    </a>
-            </td>
-            <td>
+                    <img src=" @item.user.ProfileImage" alt="img" class="smallimg" />
+                    @Html.DisplayFor(modelItem => item.user.Firstname)
+                    @Html.DisplayFor(x => item.user.Lastname)
+                </a>
+            </span>
+            <span class="col-md-4">
                 @Html.DisplayFor(modelItem => item.message)
-            </td>
-            <td>
+            </span>
+            <span class="col-md-4">
                 @Html.DisplayFor(modelItem => item.dateCreatd)
-            </td>
+            </span>
 
-            <td>
+            <span>
                 <a asp-action="Edit" asp-route-id="@item.ThreadPostId">Edit</a> |
                 <a asp-action="Delete" asp-route-id="@item.ThreadPostId">Delete</a>
-            </td>
-        </tr>
+            </span>
+        </div>
+    }
+</div>*@
+
+
+@foreach (var item in Model.threadpost)
+{
+<div class="row current-chat-area">
+    <div class="col-md-12">
+        <ul class="media-list">
+            <li class="media">
+                <div class="media-body">
+                    <div class="media">
+                        <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.user.Id" class="pull-left">
+                            <img class="feedImg img-circle" src="@item.user.ProfileImage">
+                        </a>
+                        <div class="media-body">
+                            @Html.DisplayFor(modelItem => item.message)
+                            <br>
+                            <small class="text-muted">@Html.DisplayFor(modelItem => item.user.Firstname)
+                            @Html.DisplayFor(x => item.user.Lastname) | @Html.DisplayFor(modelItem => item.dateCreatd) | Reply</small>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            </ul>
+           </div>
+    </div>
 }
-    </tbody>
-</table>
+
+
