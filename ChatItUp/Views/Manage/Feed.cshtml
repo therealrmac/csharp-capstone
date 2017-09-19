@@ -3,17 +3,27 @@
 
 <div class="container">
     <div class="row">
-        @foreach (var item in Model.relation1)
-        {
+@if(Model.friendPost1.Count()== 0   )
+{
+    <div class="text-center">
+    <h2>You currently do not have any friends</h2>
+    <p>Try searching for user if you know any, or browse the forums and talk to people.</p>
+        </div>
+        <div>
+        <img src="~/Profile/guessIdonthaveanyfriends.jpg" alt="oops" class="left"/>
+        </div>
 
-            @foreach (var xitem in item.Friend.ThreadPosts)
-            {
+}
+else
+{
+        @foreach (var item in Model.friendPost1)
+        {
                 <div class="message-item" id="m5">
                     <div class="message-inner">
                         <div class="message-head clearfix">
                             <div class="avatar pull-left">
-                                <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@xitem.user.Id">
-                                    <img src="@xitem.user.ProfileImage" class="feedImg"/>
+                                <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.user.Id">
+                                    <img src="@item.user.ProfileImage" class="feedImg"/>
                                     </a>
                         </div>
                             <div class="user-detail">
@@ -22,71 +32,28 @@
                                     <div class="asker-meta">
                                         <span class="qa-message-what"></span>
                                         <span class="qa-message-when">
-                                            <span class="qa-message-when-data">@xitem.dateCreatd</span>
+                                            <span class="qa-message-when-data">@item.dateCreatd</span>
                                         </span>
                                         <span class="qa-message-who">
 
                                             <span class="qa-message-who-pad">by </span>
-                                            <span class="qa-message-who-data"><a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@xitem.user.Id">@xitem.user.Firstname @xitem.user.Lastname</a></span>
+                                            <span class="qa-message-who-data"><a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.user.Id">@item.user.Firstname @item.user.Lastname</a></span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <a asp-controller="ThreadPosts" asp-action="Index" asp-route-id="@xitem.ThreadId">Jump to Thread </a>
+                        <a asp-controller="ThreadPosts" asp-action="Index" asp-route-id="@item.ThreadId">Jump to Thread </a>
                             <div class="qa-message-content">
-                                @xitem.message
+                                @item.message
                             </div>
                        
 </div>
                 </div>
 
-            }
+
         }
+}
         </div>
     </div>
 
-<div class="container">
-    <div class="row">
-        @foreach (var item in Model.relation2)
-        {
-
-            @foreach (var xitem in item.User.ThreadPosts)
-            {
-                <div class="message-item" id="m5">
-                    <div class="message-inner">
-                        <div class="message-head clearfix">
-                            <div class="avatar pull-left">
-                                <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@xitem.user.Id">
-                                    <img src="@xitem.user.ProfileImage" class="feedImg" />
-                                </a>
-                            </div>
-                            <div class="user-detail">
-
-                                <div class="post-meta">
-                                    <div class="asker-meta">
-                                        <span class="qa-message-what"></span>
-                                        <span class="qa-message-when">
-                                            <span class="qa-message-when-data">@xitem.dateCreatd</span>
-                                        </span>
-                                        <span class="qa-message-who">
-
-                                            <span class="qa-message-who-pad">by </span>
-                                            <span class="qa-message-who-data"><a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@xitem.user.Id">@xitem.user.Firstname @xitem.user.Lastname</a></span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <a asp-controller="ThreadPosts" asp-action="Index" asp-route-id="@xitem.ThreadId">Jump to Thread </a>
-                        <div class="qa-message-content">
-                            @xitem.message
-                        </div>
-
-                    </div>
-                </div>
-
-            }
-        }
-    </div>
-</div>

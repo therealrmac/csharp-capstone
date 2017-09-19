@@ -10,5 +10,7 @@ namespace ChatItUp.Models.ViewModels
         public List<Relation> relation1 { get; set; }
 
         public List<Relation> relation2 { get; set; }
+
+        public List<ThreadPost> friendPost1 { get; set; } = new List<ThreadPost>();
     }
 }

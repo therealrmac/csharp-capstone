@@ -9,6 +9,7 @@ using ChatItUp.Data;
 using ChatItUp.Models;
 using Microsoft.AspNetCore.Identity;
 using ChatItUp.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChatItUp.Controllers
 {
@@ -35,8 +36,13 @@ namespace ChatItUp.Controllers
                 return NotFound();
             }
             ThreadPostVM.threadpost = await _context.ThreadPost.Include(t => t.Thread).Include(u => u.user).Where(tp => tp.ThreadId == (int)id).ToListAsync();
+
             ThreadPostVM.Thread =  _context.Thread.Include(t => t.ThreadPost).Include(u => u.User).SingleOrDefault(tp => tp.ThreadId == (int)id);
+
+
+            ThreadPostVM.Forum = _context.Forum.Include(t => t.thread).SingleOrDefault(m => m.ForumId == ThreadPostVM.Thread.ForumId);
             
+
 
 
             return View(ThreadPostVM);
@@ -62,6 +68,7 @@ namespace ChatItUp.Controllers
         }
 
         // GET: ThreadPosts/Create
+        [Authorize]
         public async Task<IActionResult> Create(int? id)
         {
             var threadpost = new ThreadPost();
@@ -80,6 +87,7 @@ namespace ChatItUp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(ThreadPost threadPost)
         {
             ModelState.Remove("User");

@@ -54,6 +54,8 @@ namespace ChatItUp.Controllers
             var CheckConnectedAndConfirmed2 = _context.Relation.Any(x => x.User == userFriend && x.Friend.Id == user.Id && x.Connected == true);
             var completeFriendList = await _context.Relation.Include("Friend").Where(x => x.User == user && x.Friend.Id==id && x.Connected == true).ToListAsync();
             var completeFriendList2 = await _context.Relation.Include("User").Where(x => x.Friend == user && x.User.Id==id && x.Connected == true).ToListAsync();
+            var completeFriendList3 = await _context.Relation.Include("Friend").Where(x => x.User.Id == id && x.User!= user && x.Friend != user && x.Connected == true).ToListAsync();
+            var completeFriendList4 = await _context.Relation.Include("User").Where(x => x.Friend.Id == id && x.User != user  && x.Friend != user && x.Connected == true).ToListAsync();
 
             var posts = _context.ThreadPost.Where(x => x.user.Id == id);
 
@@ -65,6 +67,8 @@ namespace ChatItUp.Controllers
             upVM.User = await _context.ApplicationUser.Where(u => u.Id == id).SingleOrDefaultAsync();
             upVM.friendList = completeFriendList;
             upVM.friendList2 = completeFriendList2;
+            upVM.friendList3 = completeFriendList3;
+            upVM.friendList4 = completeFriendList4;
             upVM.totalThreads = threadsCretaed;
             upVM.totalPosts = posts;            
 

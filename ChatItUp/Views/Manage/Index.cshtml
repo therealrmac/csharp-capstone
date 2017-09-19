@@ -15,8 +15,22 @@
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <div class="container">
     <div class="fb-profile">
+        @if (Model.ApplicationUser.BannerImage == null)
+        {
+            <img align="left" class="fb-image-lg" src="~/Profile/blankBanner.jpg" alt="blank banner" />
+        }
+        else
+        {
         <img align="left" class="fb-image-lg" src="@Model.ApplicationUser.BannerImage" alt="Profile image example" />
+        }
+        @if (Model.ApplicationUser.ProfileImage == null)
+        {
+           <img align="left" class="fb-image-profile thumbnail" src="~/Profile/blankProfile.jpg" alt="blank profile image" /> 
+        }
+        else
+        {
         <img align="left" class="fb-image-profile thumbnail" src="@Model.ApplicationUser.ProfileImage" alt="Profile image example" />
+        }
         <div class="fb-profile-text">
             <h1>@Model.ApplicationUser.Firstname @Model.ApplicationUser.Lastname</h1>
             
@@ -28,23 +42,47 @@
         <div>
             @foreach (var item in Model.friendList)
             {
+                @if (item.Friend.ProfileImage == null)
+                {
+                    <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.Friend.Id">
+                        <img src="~/Profile/blankProfile.jpg" alt="img" class="smallimg" />
+                        @Html.DisplayFor(modelItem => item.Friend.Firstname)
+                        @Html.DisplayFor(x => item.Friend.Lastname)
+                    </a>
+                    <br />
+                }
+                else
+                {
                 <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.Friend.Id">
                     <img src=" @item.Friend.ProfileImage" alt="img" class="smallimg" />
                     @Html.DisplayFor(modelItem => item.Friend.Firstname)
                     @Html.DisplayFor(x => item.Friend.Lastname)
                 </a>
-
-            }
+                <br />
+                    }
+                }
             
             @foreach (var item in Model.friendList2)
             {
+                @if (item.User.ProfileImage == null)
+                {
+                    <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.User.Id">
+                        <img src="~/Profile/blankProfile.jpg" alt="img" class="smallimg" />
+                        @Html.DisplayFor(modelItem => item.User.Firstname)
+                        @Html.DisplayFor(x => item.User.Lastname)
+                    </a>
+                    <br />
+                }
+                else
+                {
                 <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.User.Id">
                     <img src=" @item.User.ProfileImage" alt="img" class="smallimg" />
                     @Html.DisplayFor(modelItem => item.User.Firstname)
                     @Html.DisplayFor(x => item.User.Lastname)
                 </a>
-
-            }
+                <br />
+                    }
+                }
         </div>
 
     </div>
