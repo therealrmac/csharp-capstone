@@ -9,7 +9,6 @@ namespace ChatItUp.Models.ViewModels
     {
         public Forum Forum { get; set; }
         public List<Thread> Thread { get; set; }
-
-
+       
     }
 }

@@ -5,7 +5,9 @@
 }
 
 <h2>Threads</h2>
-@if(Model.Thread == null)
+
+<p><a asp-controller="Categories" asp-action="Index">Categories </a>: <a asp-controller="Fora" asp-action="Index2" asp-route-id="@Model.Forum.CategoryId">Forum</a> : Threads :</p>
+@if(Model.Thread.Count()== 0)
 {
     <h3>Be the first to make a thread!</h3>
 }

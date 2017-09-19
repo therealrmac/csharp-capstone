@@ -10,6 +10,7 @@ namespace ChatItUp.Models.ViewModels
     {
         public Thread Thread { get; set; }
         public List<ThreadPost> threadpost { get; set; }
-       
+        public Forum Forum { get; set; }
+        public Category Category { get; set; }
     }
 }

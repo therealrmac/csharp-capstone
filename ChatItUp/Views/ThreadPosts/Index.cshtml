@@ -6,6 +6,9 @@
 
 <h2>@Model.Thread.Title</h2>
 
+<p><a asp-controller="Categories" asp-action="Index">Categories </a>: <a asp-controller="Fora" asp-action="Index2" asp-route-id="@Model.Forum.CategoryId">Forum</a> : <a asp-controller="Threads" asp-route-id="@Model.Thread.ForumId">Threads </a>: Discussion</p>
+
+
 <p>
     <a asp-action="Create" asp-route-id="@Model.Thread.ThreadId">Reply</a>
 </p>
@@ -38,34 +41,7 @@
 <hr />
 <br />
 <br />
-@*<div class="container">
 
-    @foreach (var item in Model.threadpost)
-    {
-        <div class="row">
-            <span class="col-md-3">
-                -Reply-
-                @*Place where a user can click a persons name and be taken to their profile
-                <a asp-controller="Relations" asp-action="UserProfile" asp-route-id="@item.user.Id">
-                    <img src=" @item.user.ProfileImage" alt="img" class="smallimg" />
-                    @Html.DisplayFor(modelItem => item.user.Firstname)
-                    @Html.DisplayFor(x => item.user.Lastname)
-                </a>
-            </span>
-            <span class="col-md-4">
-                @Html.DisplayFor(modelItem => item.message)
-            </span>
-            <span class="col-md-4">
-                @Html.DisplayFor(modelItem => item.dateCreatd)
-            </span>
-
-            <span>
-                <a asp-action="Edit" asp-route-id="@item.ThreadPostId">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.ThreadPostId">Delete</a>
-            </span>
-        </div>
-    }
-</div>*@
 
 
 @foreach (var item in Model.threadpost)

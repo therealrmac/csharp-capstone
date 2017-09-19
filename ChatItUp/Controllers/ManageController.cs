@@ -184,6 +184,11 @@ namespace ChatItUp.Controllers
                 .Include(x => x.Friend)
                  .ThenInclude(y => y.ThreadPosts)
                 .Where(x => x.User == user && x.Connected == true).ToListAsync();
+
+            foreach(var item in yourFriends)
+            {
+               ffVM.friendPost1.AddRange(item.Friend.ThreadPosts);
+            }
             //END
 
             //LINQ FOR GETTING A LIST OF POSTS MADE BY FRIENDS FROM THE USER COLUMN IN REALTION WHERE FRIEND COLUMN IS THE CURRENT USER
@@ -192,10 +197,14 @@ namespace ChatItUp.Controllers
                  .ThenInclude(y => y.ThreadPosts)
                 .Where(x => x.Friend == user && x.Connected == true).ToListAsync();
             //END
+            foreach (var item in yourFriends2)
+            {
+                ffVM.friendPost1.AddRange(item.User.ThreadPosts);
+            }
 
+            ffVM.friendPost1 = ffVM.friendPost1.OrderByDescending(x => x.dateCreatd).ToList();
             //BIND THESE NEW VARIABLES TO THE VIEW MODEL
-            ffVM.relation1 = yourFriends;
-            ffVM.relation2 = yourFriends2;
+
 
             return View(ffVM);
            
@@ -568,7 +577,7 @@ namespace ChatItUp.Controllers
             return View("Index");
         }
 
-        [Authorize]
+        
         public async Task<IActionResult> Search(string searchFor, string searchText)
         {
             UserListViewModel viewModel = new UserListViewModel();
