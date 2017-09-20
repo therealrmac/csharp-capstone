@@ -43,8 +43,6 @@ namespace ChatItUp.Controllers
             ThreadPostVM.Forum = _context.Forum.Include(t => t.thread).SingleOrDefault(m => m.ForumId == ThreadPostVM.Thread.ForumId);
             
 
-
-
             return View(ThreadPostVM);
         }
 
