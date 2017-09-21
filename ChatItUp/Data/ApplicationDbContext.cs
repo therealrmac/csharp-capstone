@@ -24,13 +24,13 @@ namespace ChatItUp.Data
             // Add your customizations after calling base.OnModelCreating(builder);
             builder.Entity<Thread>()
                .Property(b => b.created)
-               .HasDefaultValueSql("GETDATE()");
+               .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
             builder.Entity<ThreadPost>()
                .Property(b => b.dateCreatd)
-               .HasDefaultValueSql("GETDATE()");
+               .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
             builder.Entity<Relation>()
                .Property(b => b.ConnectedOn)
-               .HasDefaultValueSql("GETDATE()");
+               .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
         }
 
         public DbSet<ChatItUp.Models.Category> Category { get; set; }
