@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using ChatItUp.Data;
 
-namespace ChatItUp.Data.Migrations
+namespace ChatItUp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -13,8 +13,7 @@ namespace ChatItUp.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.2")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "1.1.3");
 
             modelBuilder.Entity("ChatItUp.Models.ApplicationUser", b =>
                 {
@@ -322,7 +321,7 @@ namespace ChatItUp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ChatItUp.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Threads")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -335,7 +334,7 @@ namespace ChatItUp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ChatItUp.Models.ApplicationUser", "user")
-                        .WithMany()
+                        .WithMany("ThreadPosts")
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

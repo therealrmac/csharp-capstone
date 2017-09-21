@@ -5,17 +5,16 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using ChatItUp.Data;
 
-namespace ChatItUp.Data.Migrations
+namespace ChatItUp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170910161024_initial")]
-    partial class initial
+    [Migration("20170921161047_intial")]
+    partial class intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.2")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "1.1.3");
 
             modelBuilder.Entity("ChatItUp.Models.ApplicationUser", b =>
                 {
@@ -23,6 +22,8 @@ namespace ChatItUp.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("BannerImage");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -32,9 +33,11 @@ namespace ChatItUp.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("Firstname");
+                    b.Property<string>("Firstname")
+                        .IsRequired();
 
-                    b.Property<string>("Lastname");
+                    b.Property<string>("Lastname")
+                        .IsRequired();
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -51,6 +54,8 @@ namespace ChatItUp.Data.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("ProfileImage");
 
                     b.Property<string>("SecurityStamp");
 
@@ -69,6 +74,116 @@ namespace ChatItUp.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("ChatItUp.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("image");
+
+                    b.Property<string>("title");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("ChatItUp.Models.Forum", b =>
+                {
+                    b.Property<int>("ForumId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CategoryId");
+
+                    b.Property<string>("ThreadTitles");
+
+                    b.HasKey("ForumId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Forum");
+                });
+
+            modelBuilder.Entity("ChatItUp.Models.Relation", b =>
+                {
+                    b.Property<int>("RelationshipId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool?>("Connected");
+
+                    b.Property<DateTime>("ConnectedOn")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("FriendId")
+                        .IsRequired();
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("RelationshipId");
+
+                    b.HasIndex("FriendId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Relation");
+                });
+
+            modelBuilder.Entity("ChatItUp.Models.Thread", b =>
+                {
+                    b.Property<int>("ThreadId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorMessage")
+                        .IsRequired();
+
+                    b.Property<int>("ForumId");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.Property<DateTime>("created")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("ThreadId");
+
+                    b.HasIndex("ForumId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Thread");
+                });
+
+            modelBuilder.Entity("ChatItUp.Models.ThreadPost", b =>
+                {
+                    b.Property<int>("ThreadPostId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ThreadId");
+
+                    b.Property<DateTime>("dateCreatd")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("message");
+
+                    b.Property<string>("userId")
+                        .IsRequired();
+
+                    b.HasKey("ThreadPostId");
+
+                    b.HasIndex("ThreadId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("ThreadPost");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
@@ -176,6 +291,53 @@ namespace ChatItUp.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("ChatItUp.Models.Forum", b =>
+                {
+                    b.HasOne("ChatItUp.Models.Category", "Category")
+                        .WithMany("Forum")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ChatItUp.Models.Relation", b =>
+                {
+                    b.HasOne("ChatItUp.Models.ApplicationUser", "Friend")
+                        .WithMany("Friends")
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ChatItUp.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ChatItUp.Models.Thread", b =>
+                {
+                    b.HasOne("ChatItUp.Models.Forum", "Forum")
+                        .WithMany("thread")
+                        .HasForeignKey("ForumId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ChatItUp.Models.ApplicationUser", "User")
+                        .WithMany("Threads")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ChatItUp.Models.ThreadPost", b =>
+                {
+                    b.HasOne("ChatItUp.Models.Thread", "Thread")
+                        .WithMany("ThreadPost")
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ChatItUp.Models.ApplicationUser", "user")
+                        .WithMany("ThreadPosts")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
