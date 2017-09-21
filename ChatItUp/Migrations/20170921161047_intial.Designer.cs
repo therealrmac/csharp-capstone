@@ -8,9 +8,10 @@ using ChatItUp.Data;
 namespace ChatItUp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170921161047_intial")]
+    partial class intial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.3");
@@ -114,7 +115,7 @@ namespace ChatItUp.Migrations
 
                     b.Property<DateTime>("ConnectedOn")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("FriendId")
                         .IsRequired();
@@ -149,7 +150,7 @@ namespace ChatItUp.Migrations
 
                     b.Property<DateTime>("created")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("ThreadId");
 
@@ -169,7 +170,7 @@ namespace ChatItUp.Migrations
 
                     b.Property<DateTime>("dateCreatd")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("message");
 
